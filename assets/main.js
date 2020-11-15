@@ -5,9 +5,9 @@ let cnt_click = 0;
 let nameList = [];
 
 /**
- * Ajout de ligne
+ * Get status
  */
-document.getElementById('bt').addEventListener('click', ()=>{
+document.getElementById('status').addEventListener('click', ()=>{
     cnt_click = cnt_click + 1;
     let perso = new Character(nameList[dice(99)], dice(10), dice(100), dice(100), dice(1000));
     perso.status();
@@ -40,6 +40,13 @@ function dice (max) {
     return Math.floor(Math.random() * Math.floor(max));
 }
 
+/**
+ * Récupère la valeur du formulaire
+ */
+function get_input() {
+    let value = document.querySelector('#input_text').value;
+    return value;
+}
 
 
 /**
@@ -57,10 +64,10 @@ class Character {
     // Les différentes actions
     status () {
         write (
-            "Je m'appel " + this.name
-            + " , je suis level " + this.level + "."
-            + " J'ai " + this.life + " points de vie, "
-            + this.atk + "points d'attaques, et "
+            "Tu t'appel " + this.name
+            + " , tu es level " + this.level + "."
+            + " Tu as " + this.life + " points de vie, "
+            + this.atk + " points d'attaques, et "
             + this.gold + " zoublons. "
         )
     }
@@ -81,3 +88,32 @@ async function call_Api() {
         });
 }
 call_Api();
+
+
+/**
+ * Main 
+ */
+let b_heroIsSet = false;
+
+if(b_heroIsSet === false) {
+    document.getElementById("choix").setAttribute('hidden',"");
+} else {
+    document.getElementById("choix").removeAttribute('hidden');
+}
+
+
+// Création du héro
+if (b_heroIsSet === false) {
+    write("Bonjour voyageur, je m'appel zarvis et je serais votre assistant.");
+    write("Avant d'aller plus loin, puis je connaitre votre nom ?");
+    document.getElementById("form_input").removeAttribute("hidden");
+
+    document.getElementById('bt_form_validate').addEventListener('submit', (e)=>{
+        e.preventDefault();
+        console.log(e);
+    });
+
+    b_heroIsSet = true;
+
+
+}
