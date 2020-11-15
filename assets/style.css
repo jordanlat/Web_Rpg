@@ -1,0 +1,25 @@
+body {
+    font-size: larger;
+}
+
+#titre {
+    background-color: rgba(48, 42, 42, 0.897);
+    text-align: center;
+    margin: 0% 10%;
+    padding: 5% 0%;
+}
+
+.white{
+    color: rgba(255, 255, 255, 0.808);
+}
+
+.box {
+    border: 3px solid black;
+    margin: 5% 10%;
+    padding: 5% 8%;
+}
+
+button {
+    margin: 10px;
+    font-size: larger;
+}
