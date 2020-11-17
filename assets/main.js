@@ -1,42 +1,56 @@
 
 console.log("Que la partie commence");
 let cnt_click = 0;
-
 let nameList = [];
+let intro = true;
+
+/**
+ * API récuperer des noms aléatoires
+ */
+async function call_Api() {
+    let result = await fetch("http://names.drycodes.com/100?separator=space")
+        .then(response => response.json())
+        .then(result => {
+            result.forEach(element => {
+                nameList.push(element);
+            });
+        });
+}
+call_Api();
 
 /**
  * Get status
  */
-document.getElementById('status').addEventListener('click', ()=>{
-    cnt_click = cnt_click + 1;
-    let perso = new Character(nameList[dice(99)], dice(10), dice(100), dice(100), dice(1000));
-    perso.status();
-
+document.getElementById('status').addEventListener('click', () => {
+    // let perso = new Character(nameList[dice(99)], dice(10), dice(100), dice(100), dice(1000));
+    hero.status();
 });
 
 
 /**
  * Ecrit du texte
  */
-function write(t){
+function write(t) {
     let type_texte = document.createElement('H3');
     let add = document.getElementById('activity');
 
     type_texte.innerText = "- " + t;
     type_texte.setAttribute('id', cnt_click);
     add.appendChild(type_texte);
-
+    cnt_click = cnt_click + 1;
     // Supprime l'élément à cnt_click -5
-    if (cnt_click>5) {
-        document.getElementById(cnt_click-5).remove();
+    if (cnt_click >= 5) {
+        console.log("more five" + cnt_click);
+        document.getElementById(cnt_click - 5).remove();
     }
+
 }
 
 
 /**
  *  Randomiser
  */
-function dice (max) {
+function dice(max) {
     return Math.floor(Math.random() * Math.floor(max));
 }
 
@@ -47,6 +61,8 @@ function get_input() {
     let value = document.querySelector('#input_text').value;
     return value;
 }
+
+
 
 
 /**
@@ -62,8 +78,8 @@ class Character {
     }
 
     // Les différentes actions
-    status () {
-        write (
+    status() {
+        write(
             "Tu t'appel " + this.name
             + " , tu es level " + this.level + "."
             + " Tu as " + this.life + " points de vie, "
@@ -72,48 +88,41 @@ class Character {
         )
     }
 
+    heal() {
+        const nbrLife = dice(50);
+        this.life = this.life + nbrLife;
+        write("Tu as regagner " + nbrLife + " points de vie.");
+    }
+
 }
 
 
 /**
- * API récuperer des noms aléatoires
+ * Start 
  */
-async function call_Api() {
-        let result = await fetch("http://names.drycodes.com/100?separator=space")
-        .then(response => response.json())
-        .then(result => {
-            result.forEach(element => {
-                nameList.push(element);
-            });
-        });
-}
-call_Api();
+let d_name = prompt("Bonjour aventurier, comment te nommes tu ?: ");
 
-
-/**
- * Main 
- */
-let b_heroIsSet = false;
-
-if(b_heroIsSet === false) {
-    document.getElementById("choix").setAttribute('hidden',"");
-} else {
-    document.getElementById("choix").removeAttribute('hidden');
-}
-
+let hero = new Character(d_name, 0, dice(100), dice(100), 0);
 
 // Création du héro
-if (b_heroIsSet === false) {
-    write("Bonjour voyageur, je m'appel zarvis et je serais votre assistant.");
-    write("Avant d'aller plus loin, puis je connaitre votre nom ?");
-    document.getElementById("form_input").removeAttribute("hidden");
+write("Bonjour " + d_name + ", je m'appel zarvis et je serais votre assistant.");
 
-    document.getElementById('bt_form_validate').addEventListener('submit', (e)=>{
-        e.preventDefault();
-        console.log(e);
-    });
+/**
+ * Action à l'enregistrement
+ */
+document.getElementById('form').addEventListener('submit', (e) => {
+    e.preventDefault();
 
-    b_heroIsSet = true;
+    document.getElementById('choix').removeAttribute('hidden');
+    document.getElementById('form_input').setAttribute('hidden', true);
+    Main_game(get_input());
 
+});
 
-}
+/**
+ * Action Se reposer
+ */
+
+document.getElementById('heal').addEventListener('click', () => {
+    hero.heal();
+});
