@@ -18,13 +18,6 @@ async function call_Api() {
 }
 call_Api();
 
-/**
- * Get status
- */
-document.getElementById('status').addEventListener('click', () => {
-    // let perso = new Character(nameList[dice(99)], dice(10), dice(100), dice(100), dice(1000));
-    hero.status();
-});
 
 
 /**
@@ -69,18 +62,19 @@ function get_input() {
  * Personages
  */
 class Character {
-    constructor(name, level, life, atk, gold) {
+    constructor(name, level, life, atk, gold, exp) {
         this.name = name;
         this.level = level;
         this.life = life;
         this.atk = atk;
         this.gold = gold;
+        this.exp = exp;
     }
 
     // Les différentes actions
     status() {
         write(
-            "Tu t'appel " + this.name
+            this.name
             + " , tu es level " + this.level + "."
             + " Tu as " + this.life + " points de vie, "
             + this.atk + " points d'attaques, et "
@@ -94,35 +88,79 @@ class Character {
         write("Tu as regagner " + nbrLife + " points de vie.");
     }
 
+    aventure() {
+        let event = dice(5);
+        console.log(event);
+
+        switch (event) {
+            case 1:
+                write('Oh! Non un bandit te veut du mal!');
+                document.getElementById('menu_main').setAttribute('hidden', "");
+                document.getElementById('menu_combat').removeAttribute('hidden');
+                let bandit = new Character(
+                    nameList[dice(99)],
+                    dice(100),
+                    dice(100),
+                    dice(100),
+                    dice(1000),
+                    dice(100)
+                );
+                bandit.status();
+
+                break;
+
+            case 2:
+                const zoublons_earn = dice(100000);
+                write("Oh fou tu viens de trouver " + zoublons_earn + " zoublons !");
+                hero.gold = hero.gold + zoublons_earn;
+
+                break;
+            
+            case 3:
+                const exp_earn = dice(1000);
+                write("Wow tu viens de trouver un crystal d'exp et tu obtient " + exp_earn + " exp");
+                hero.exp = hero.exp + exp_earn;
+
+                break;
+            
+            default:
+                write("Wow il ne s'est rien passé, même pas un bandit à l'horizon.");
+
+        }
+    }
+
 }
 
 
 /**
  * Start 
  */
-let d_name = prompt("Bonjour aventurier, comment te nommes tu ?: ");
+let d_name = prompt("Bonjour aventurier, comment te nommes tu ?");
 
 let hero = new Character(d_name, 0, dice(100), dice(100), 0);
 
 // Création du héro
-write("Bonjour " + d_name + ", je m'appel zarvis et je serais votre assistant.");
+write("Bonjour " + d_name + " !" + " Je m'appel zarvis et je serais votre assistant !");
 
-/**
- * Action à l'enregistrement
- */
-document.getElementById('form').addEventListener('submit', (e) => {
-    e.preventDefault();
 
-    document.getElementById('choix').removeAttribute('hidden');
-    document.getElementById('form_input').setAttribute('hidden', true);
-    Main_game(get_input());
-
-});
 
 /**
  * Action Se reposer
  */
-
 document.getElementById('heal').addEventListener('click', () => {
     hero.heal();
 });
+
+/**
+ * Action status
+ */
+document.getElementById('status').addEventListener('click', () => {
+    hero.status();
+});
+
+/**
+ * Action aventure
+ */
+document.getElementById('aventure').addEventListener('click', ()=> {
+    hero.aventure();
+})
