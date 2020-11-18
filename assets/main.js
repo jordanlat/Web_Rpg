@@ -7,7 +7,9 @@ let intro = true;
 /**
  * API récuperer des noms aléatoires
  */
+
 async function call_Api() {
+
     let result = await fetch("http://names.drycodes.com/100?separator=space")
         .then(response => response.json())
         .then(result => {
@@ -17,6 +19,57 @@ async function call_Api() {
         });
 }
 call_Api();
+
+
+/*
+async function call_Api() {
+    const init = {
+        method: 'get',
+        headers: {
+            "Content-Type": "application/json; charset=UTF-8"
+        }
+    }
+    let result = await fetch("http://names.drycodes.com/100?separator=space", init)
+        .then(response => response.json())
+        .then(result => {
+            result.forEach(element => {
+                nameList.push(element);
+            });
+        });
+}
+call_Api();
+*/
+
+/*
+const url = "http://names.drycodes.com/100?separator=space";
+let h = new Headers();
+h.append('Content-Type', 'application/json');
+
+let req = new Request(url, {
+    method: 'GET',
+    headers: h,
+    mode: 'no-cors'
+});
+async function call_api () {
+    await fetch(req)
+    .then((response)=>{
+        console.log(response);
+        if(response.ok) {
+            return response.json();
+        } else {
+            throw new Error('reponse not ok')
+        }
+    })
+    .then((result) => {
+        console.log(result);
+    })
+    .catch((err) => {
+        console.log('error: ', err.message)
+    });
+}
+call_api();
+
+*/
 
 
 
@@ -115,14 +168,14 @@ class Character {
                 hero.gold = hero.gold + zoublons_earn;
 
                 break;
-            
+
             case 3:
                 const exp_earn = dice(1000);
                 write("Wow tu viens de trouver un crystal d'exp et tu obtient " + exp_earn + " exp");
                 hero.exp = hero.exp + exp_earn;
 
                 break;
-            
+
             default:
                 write("Wow il ne s'est rien passé, même pas un bandit à l'horizon.");
 
@@ -143,6 +196,9 @@ let hero = new Character(d_name, 0, dice(100), dice(100), 0);
 write("Bonjour " + d_name + " !" + " Je m'appel zarvis et je serais votre assistant !");
 
 
+/************
+ * MENU MAIN
+ ************/
 
 /**
  * Action Se reposer
@@ -161,6 +217,15 @@ document.getElementById('status').addEventListener('click', () => {
 /**
  * Action aventure
  */
-document.getElementById('aventure').addEventListener('click', ()=> {
+document.getElementById('aventure').addEventListener('click', () => {
     hero.aventure();
-})
+});
+
+
+
+/**************
+ * MENU COMBAT
+ **************/
+document.getElementById('attaquer'.addEventListener('clicl',() => {
+    hero.attaque();
+}))
