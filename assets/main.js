@@ -1,9 +1,31 @@
+
+
+
+
 console.log("Que la partie commence");
 let cnt_click = 0;
 let nameList = [];
 let intro = true;
-
 let bandit;
+
+
+// Temporaire - en attendant de résoudre le call_Api => cors Allow-Origin-Access
+nameList = [
+    "Trees Puppy","Male Shelf","Floppy Disk Floppy Disk","Running Horse","Settings Mail","Breakfast Allergies",
+    "Shoe Water","Clock Horse","BBQ Drugs","Dog YouTube","Mail Soda","Laptop Toilet","Clock Leash","Puppy Breakfast",
+    "Prints Male","Dislike Soda","Kitty Ice cream","Poop Running","Hnads Shelf","Video games Comics","Dog Puppy",
+    "Floppy Disk Shoes","Robot Post office","Hnads Dislike","System Monster","Whale Plants","Fence Fence",
+    "Prints Floppy Disk","Elevator Fusion","Cone Cone","YouTube Shoe","Video games Shoes","Shoe Dislike",
+    "Toilet Cat","Male Cat","Comics Video games","Bird Boat","Running Prints","Dog Dislike","Boat Towel",
+    "Breakfast Rollers","Male Trees","Toolbox Cat","Soap Prints","Website Kitty","System Allergies","Poop Solar",
+    "BBQ Hnads","Rollers BBQ","Toolbox Leash","Comics Shower","Dog Book","Plants Book","Crab Kitty","Nuclear Boat",
+    "Post office Allergies","Prints Ring","Comics Nuclear","Towel Clock","Leash Cat","BBQ Settings","Drugs Shelf",
+    "Urine Clock","Soda Flowers","YouTube Cone","System Post office","Hnads Laptop","Websites Leash","Ice cream cone Comics",
+    "Puppy Websites","Flowers Robot","Toolbox Plants","Kitty Floppy Disk","Comics BBQ","Crab Cat","System Sink","Floppy Disk Clock",
+    "Puppy Android","Solar Post office","Sink Shower","Printer Sink","Toilet Ice cream","Settings Laptop","Shoes Post office",
+    "Trees Light saber","Male Ring","Towel Monster","Leash Settings","Plants Male","Settings Trees","Ring Solar","Solar YouTube",
+    "Poop Ring","Male Plus","Monster Puppy","Flowers Allergies","Breakfast Soda","Drugs Cat","Dog Robot","Shelf Rollers"
+];
 
 /**
  * API récuperer des noms aléatoires
@@ -17,9 +39,10 @@ async function call_Api() {
             result.forEach(element => {
                 nameList.push(element);
             });
+            console.log(nameList);
         });
 }
-call_Api();
+// call_Api();
 
 
 
