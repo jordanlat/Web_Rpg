@@ -1,8 +1,9 @@
-
 console.log("Que la partie commence");
 let cnt_click = 0;
 let nameList = [];
 let intro = true;
+
+let bandit;
 
 /**
  * API récuperer des noms aléatoires
@@ -21,77 +22,24 @@ async function call_Api() {
 call_Api();
 
 
-/*
-async function call_Api() {
-    const init = {
-        method: 'get',
-        headers: {
-            "Content-Type": "application/json; charset=UTF-8"
-        }
-    }
-    let result = await fetch("http://names.drycodes.com/100?separator=space", init)
-        .then(response => response.json())
-        .then(result => {
-            result.forEach(element => {
-                nameList.push(element);
-            });
-        });
-}
-call_Api();
-*/
-
-/*
-const url = "http://names.drycodes.com/100?separator=space";
-let h = new Headers();
-h.append('Content-Type', 'application/json');
-
-let req = new Request(url, {
-    method: 'GET',
-    headers: h,
-    mode: 'no-cors'
-});
-async function call_api () {
-    await fetch(req)
-    .then((response)=>{
-        console.log(response);
-        if(response.ok) {
-            return response.json();
-        } else {
-            throw new Error('reponse not ok')
-        }
-    })
-    .then((result) => {
-        console.log(result);
-    })
-    .catch((err) => {
-        console.log('error: ', err.message)
-    });
-}
-call_api();
-
-*/
-
-
 
 /**
  * Ecrit du texte
  */
 function write(t) {
-    let type_texte = document.createElement('H3');
+    let type_texte = document.createElement('p');
     let add = document.getElementById('activity');
 
-    type_texte.innerText = "- " + t;
+    type_texte.innerHTML = "- " + t;
     type_texte.setAttribute('id', cnt_click);
     add.appendChild(type_texte);
     cnt_click = cnt_click + 1;
     // Supprime l'élément à cnt_click -5
     if (cnt_click >= 5) {
-        console.log("more five" + cnt_click);
         document.getElementById(cnt_click - 5).remove();
     }
 
 }
-
 
 /**
  *  Randomiser
@@ -108,7 +56,46 @@ function get_input() {
     return value;
 }
 
+/**
+ * Actualise l'affichage des stats
+ */
+function update_hero(e) {
+    let stat_div = document.getElementById('hero_stats');
 
+    if (stat_div.childElementCount > 0) {
+        stat_div.innerHTML = "";
+    };
+
+    // stat Nom
+    let div_t_name = document.createElement('p');
+    div_t_name.innerText = 'Nom: ' + e.name;
+    stat_div.appendChild(div_t_name);
+
+    // stat vie
+    let div_t_life = document.createElement('p');
+    div_t_life.innerText = 'Vie: ' + e.life;
+    stat_div.appendChild(div_t_life);
+
+    // stat level
+    let div_t_level = document.createElement('p');
+    div_t_level.innerText = 'Level: ' + e.level;
+    stat_div.appendChild(div_t_level);
+
+    // stat exp
+    let div_t_exp = document.createElement('p');
+    div_t_exp.innerText = 'Expérience: ' + e.exp;
+    stat_div.appendChild(div_t_exp);
+
+    // stat attaque
+    let div_t_atk = document.createElement('p');
+    div_t_atk.innerText = 'Force max: ' + e.atk;
+    stat_div.appendChild(div_t_atk);
+
+    // stat gold
+    let div_t_gold = document.createElement('p');
+    div_t_gold.innerText = 'Zoublons: ' + e.gold;
+    stat_div.appendChild(div_t_gold);
+}
 
 
 /**
@@ -126,31 +113,36 @@ class Character {
 
     // Les différentes actions
     status() {
+
         write(
-            this.name
-            + " , tu es level " + this.level + "."
-            + " Tu as " + this.life + " points de vie, "
-            + this.atk + " points d'attaques, et "
-            + this.gold + " zoublons. "
+            "<b>" + this.name + "</b>" +
+            " , tu es level " + "<b>" + this.level + "</b>" + "." +
+            " Tu as " + "<b>" + this.life + "</b>" + " points de vie, " +
+            "<b>" + this.atk + "</b>" + " points d'attaques, et " +
+            "<b>" + this.gold + "</b>" + " zoublons. "
         )
+    }
+
+    update_hero_stats() {
+
     }
 
     heal() {
         const nbrLife = dice(50);
         this.life = this.life + nbrLife;
-        write("Tu as regagner " + nbrLife + " points de vie.");
+        write("Tu as regagner <b>" + nbrLife + "</b> points de vie.");
+        update_hero(hero);
     }
 
     aventure() {
         let event = dice(5);
-        console.log(event);
 
         switch (event) {
             case 1:
                 write('Oh! Non un bandit te veut du mal!');
                 document.getElementById('menu_main').setAttribute('hidden', "");
                 document.getElementById('menu_combat').removeAttribute('hidden');
-                let bandit = new Character(
+                let newBandit = new Character(
                     nameList[dice(99)],
                     dice(100),
                     dice(100),
@@ -158,21 +150,23 @@ class Character {
                     dice(1000),
                     dice(100)
                 );
-                bandit.status();
-
+                newBandit.status();
+                bandit = newBandit;
                 break;
 
             case 2:
                 const zoublons_earn = dice(100000);
-                write("Oh fou tu viens de trouver " + zoublons_earn + " zoublons !");
+                write("Oh fou tu viens de trouver <b>" + zoublons_earn + "</b> zoublons !");
                 hero.gold = hero.gold + zoublons_earn;
+                update_hero(hero);
 
                 break;
 
             case 3:
                 const exp_earn = dice(1000);
-                write("Wow tu viens de trouver un crystal d'exp et tu obtient " + exp_earn + " exp");
+                write("Wow tu viens de trouver un crystal d'exp et tu obtient <b>" + exp_earn + "</b> exp");
                 hero.exp = hero.exp + exp_earn;
+                update_hero(hero);
 
                 break;
 
@@ -190,11 +184,23 @@ class Character {
  */
 let d_name = prompt("Bonjour aventurier, comment te nommes tu ?");
 
-let hero = new Character(d_name, 0, dice(100), dice(100), 0);
+let hero = new Character(d_name, 0, dice(100), dice(100), 0, 0);
+update_hero(hero);
 
 // Création du héro
-write("Bonjour " + d_name + " !" + " Je m'appel zarvis et je serais votre assistant !");
+write("Bonjour <b>" + d_name + "</b> !" + " Je m'appel zarvis et je serais votre assistant !");
 
+
+
+/**
+ * Reset
+ */
+function reset() {
+    let d_r_name = prompt("Bonjour aventurier, comment te nommes tu ?");
+    let hero = new Character(d_r_name, 0, dice(100), dice(100), 0, 0);
+    update_hero(hero);
+    write("Bonjour <b>" + d_r_name + "</b> !" + " Je m'appel zarvis et je serais votre assistant !");
+}
 
 /************
  * MENU MAIN
@@ -205,6 +211,7 @@ write("Bonjour " + d_name + " !" + " Je m'appel zarvis et je serais votre assist
  */
 document.getElementById('heal').addEventListener('click', () => {
     hero.heal();
+    update_hero(hero);
 });
 
 /**
@@ -212,6 +219,7 @@ document.getElementById('heal').addEventListener('click', () => {
  */
 document.getElementById('status').addEventListener('click', () => {
     hero.status();
+    update_hero(hero);
 });
 
 /**
@@ -219,6 +227,7 @@ document.getElementById('status').addEventListener('click', () => {
  */
 document.getElementById('aventure').addEventListener('click', () => {
     hero.aventure();
+    update_hero(hero);
 });
 
 
@@ -226,6 +235,24 @@ document.getElementById('aventure').addEventListener('click', () => {
 /**************
  * MENU COMBAT
  **************/
-document.getElementById('attaquer'.addEventListener('clicl',() => {
-    hero.attaque();
-}))
+
+// Si on attaque
+document.getElementById('attaquer').addEventListener('click', () => {
+    let dgt_hero = dice(hero.atk);
+    let dgt_bandit = dice(bandit.atk);
+
+    // résolution bandit vie
+    bandit.life = bandit.life - dgt_hero;
+    write("Le bandit à perdu <b>" + dgt_hero + "</b> points de vie");
+
+    // résolution hero vie
+    hero.life = hero.life - dgt_bandit;
+    write("Tu a perdu <b>" + dgt_bandit + "</b> points de vie");
+
+
+    if (hero.life <= 0) {
+        alert("DAMN you is dead");
+        reset();
+    }
+    update_hero(hero);
+});
