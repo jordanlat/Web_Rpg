@@ -4,36 +4,34 @@
 *font-family: 'Open Sans', sans-serif;
 */
 
-body,
-p {
-    font-size: 1em;
+body, p {
+    font-size: larger;
     font-family: 'Open Sans', sans-serif;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .global {
-    background-color: rgba(128, 109, 0, 0.493);
-    max-width: 70%;
+    background-color: green;
+    height: 50%;
 }
 
 #titre {
     background-color: rgba(48, 42, 42, 0.897);
     text-align: center;
+    margin: 0% 10%;
+    padding: 5% 0%;
 }
 
-.white {
+.white{
     color: rgba(255, 255, 255, 0.808);
 }
 
 .box {
     border: 3px solid black;
-    margin: 1em;
-    padding: 1em;
+    margin: 5% 10%;
+    padding: 5% 8%;
 }
 
 button {
+    margin: 10px;
     font-size: larger;
 }

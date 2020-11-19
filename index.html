@@ -1,54 +1,59 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Rpg</title>
     <link rel="stylesheet" href="./assets/style.css">
 </head>
+
 <body>
-    <div id="titre">
-        <H1 class="white">Web RPG</H1>
-        <h2 class="white">Bienvenue à toi jeune aventurier.</h2>
+    <div class="global">
+        <div id="titre">
+            <H1 class="white">Web RPG</H1>
+            <h2 class="white">Bienvenue à toi jeune aventurier.</h2>
+        </div>
+        <main>
+            <div class="box" id="activity">
+                <h2>Journal de bord: </h2>
+            </div>
+
+            <div class="box" id="hero_stats"></div>
+
+            <div class="box" id="form_input" hidden>
+                <form action="#" method="post" name="form" id="form">
+                    <label for="input">Saisie</label>
+                    <input type="text" name="input" id="input_text" required>
+                    <input type="submit" value="Validé" id="bt_form_validate">
+                </form>
+            </div>
+
+            <div class="box" id="choix">
+                <div id="menu_main">
+                    <button id="aventure">Partir à l'aventure</button>
+                    <button id="heal">Se reposer</button>
+                    <button id="bet" hidden>Parier</button>
+                    <button id="status">Status</button>
+                </div>
+
+                <div id="menu_combat" hidden>
+                    <button id="attaquer">Attaquer</button>
+                    <button id="super">Super attaque</button>
+                    <button id="soin">Se soigner</button>
+                    <button id="fuir">Prendre la fuite</button>
+                </div>
+
+
+            </div>
+
+        </main>
     </div>
-    <main>
-        <div class="box" id="hero_stats">
-
-        </div>
-        <div class="box" id="activity" >
-            <h2>Journal de bord: </h2>
-        </div>
-
-        <div class="box" id="form_input" hidden>
-            <form action="#" method="post" name="form" id="form">
-                <label for="input">Saisie</label>
-                <input type="text" name="input" id="input_text" required>
-                <input type="submit" value="Validé" id="bt_form_validate"> 
-            </form>
-        </div>
-
-        <div class="box" id="choix" >
-            <div id="menu_main" >
-                <button id="aventure">Partir à l'aventure</button>
-                <button id="heal">Se reposer</button>
-                <button id="bet" hidden>Parier</button>
-                <button id="status">Status</button>
-            </div>
-
-            <div id="menu_combat" hidden>
-                <button id="attaquer">Attaquer</button>
-                <button id="super">Super attaque</button>
-                <button id="heal">Se soigner</button>
-                <button id="fuir">Prendre la fuite</button>
-            </div>
-            
-
-        </div>
-
-    </main>
     <footer>
 
     </footer>
     <script src="./assets/main.js"></script>
+
 </body>
+
 </html>
