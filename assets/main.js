@@ -266,7 +266,6 @@ document.getElementById('heal').addEventListener('click', () => {
 document.getElementById('status').addEventListener('click', () => {
     hero.status();
     update_hero(hero);
-    switch_menu();
 });
 
 /**
