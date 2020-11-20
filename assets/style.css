@@ -24,6 +24,12 @@ p {
     max-width: 70%;
 }
 
+.global_stats {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
 #titre {
     background-color: rgba(48, 42, 42, 0.897);
     text-align: center;

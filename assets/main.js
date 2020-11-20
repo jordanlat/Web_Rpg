@@ -37,7 +37,6 @@ async function call_Api() {
             result.forEach(element => {
                 nameList.push(element);
             });
-            console.log(nameList);
         });
 }
 // call_Api();
@@ -98,10 +97,51 @@ function switch_menu() {
 }
 
 /**
- * Actualise l'affichage des stats
+ * Actualise l'affichage des stats du hero
  */
 function update_hero(e) {
     let stat_div = document.getElementById('hero_stats');
+
+    if (stat_div.childElementCount > 0) {
+        stat_div.innerHTML = "";
+    };
+
+    // stat Nom
+    let div_t_name = document.createElement('p');
+    div_t_name.innerHTML = '</p><b>Nom</b>: ' + e.name + '<p>';
+    stat_div.appendChild(div_t_name);
+
+    // stat vie
+    let div_t_life = document.createElement('p');
+    div_t_life.innerHTML = '</p><b>Vie</b>: ' + e.life + '<p>';
+    stat_div.appendChild(div_t_life);
+
+    // stat level
+    let div_t_level = document.createElement('p');
+    div_t_level.innerHTML = '</p><b>Level</b>: ' + e.level + '<p>';
+    stat_div.appendChild(div_t_level);
+
+    // stat exp
+    let div_t_exp = document.createElement('p');
+    div_t_exp.innerHTML = '</p><b>Expérience</b>: ' + e.exp + '<p>';
+    stat_div.appendChild(div_t_exp);
+
+    // stat attaque
+    let div_t_atk = document.createElement('p');
+    div_t_atk.innerHTML = '</p><b>Force max</b>: ' + e.atk + '<p>';
+    stat_div.appendChild(div_t_atk);
+
+    // stat gold
+    let div_t_gold = document.createElement('p');
+    div_t_gold.innerHTML = '</p><b>Zoublons</b>: ' + e.gold + '<p>';
+    stat_div.appendChild(div_t_gold);
+}
+
+/**
+ * Actualise l'affichage des stats du bandit
+ */
+function update_bandit(e) {
+    let stat_div = document.getElementById('bandit_stats');
 
     if (stat_div.childElementCount > 0) {
         stat_div.innerHTML = "";
@@ -152,18 +192,19 @@ function bandit_action() {
         );
     } else if (action === 2 | action === 3 | action === 4) {
         const is_critik = dice(3);
-        let dgt_bandit;
+        let dgt_bandit = dice(bandit.atk);
         if (is_critik === 3) {
-            dgt_bandit = bandit.atk * 3;
+            dgt_bandit = dgt_bandit * 3;
             write(
-                `Oh non il t'a mis un sacré coup, tu as perdu <b>${dgt_bandit}</b>.`
+                `- Oh non il t'a mis un sacré coup, tu as perdu <b>${dgt_bandit}</b>.`
             );
-            hero.life = hero.life - dgt_bandit;
+            
             who_won();
-        }
+        } 
+        hero.life = hero.life - dgt_bandit;
     } else {
         write(
-            `Héhé il s'est loupé !`
+            `- Héhé il s'est loupé !`
         );
     }
 }
@@ -192,6 +233,7 @@ function who_won() {
         hero.exp = hero.exp + bandit.exp;
         hero.gold = hero.gold + bandit.gold;
         switch_menu();
+        show_bandit_window_stats(false);
     }
     // Condition égalité
     if (hero.life <= 0 && bandit.life <= 0) {
@@ -202,10 +244,31 @@ function who_won() {
             `
         );
         switch_menu();
+        show_bandit_window_stats(false);
         reset();
     }
 }
 
+/**
+ * Affichage stats bandit
+ */
+function show_bandit_window_stats(bool) {
+    const div = document.getElementById('global_stats');
+    const div_bandit = document.getElementById('bandit_stats');
+    const div_hero = document.getElementById('hero_stats');
+    if (bool === false) {
+        if (div_bandit != null) {
+            div_hero.nextElementSibling.remove();
+        }
+
+
+    } else if (bool === true) {
+        const newDiv = document.createElement('div');
+        newDiv.setAttribute('class', 'box');
+        newDiv.setAttribute('id', "bandit_stats")
+        div.appendChild(newDiv);
+    }
+}
 
 
 /**
@@ -245,6 +308,7 @@ class Character {
 
         switch (event) {
             case 1:
+                show_bandit_window_stats(true);
                 write('- Oh! Non un bandit te veut du mal!');
                 document.getElementById('menu_main').setAttribute('hidden', "");
                 document.getElementById('menu_combat').removeAttribute('hidden');
@@ -258,6 +322,9 @@ class Character {
                 );
                 newBandit.status();
                 bandit = newBandit;
+                console.log("event");
+                update_bandit(bandit);
+
                 break;
 
             case 2:
@@ -299,22 +366,23 @@ update_hero(hero);
 // Création du héro
 write(`- Bonjour <b>${d_name}</b>! Je m'appel zarvis et je serais votre assistant !`);
 
-
+show_bandit_window_stats(false);
 
 /**
  * Reset
  */
 function reset() {
-    console.log("hero avant", hero);
-    hero = "";
-    console.log("hero après", hero);
+    hero = null;
     let d_r_name = prompt("- Bonjour aventurier, comment te nommes tu ?");
-    if (d_name == null | d_name == "") {
-        d_name = "Jhone Deau";
+    if (d_r_name === "") {
+        d_r_name = "Jhone Deau";
     }
     hero = new Character(d_r_name, 0, dice(100), dice(100), 0, 0);
+
     update_hero(hero);
     write(`- Bonjour <b>${d_r_name}</b>! Je m'appel zarvis et je serais votre assistant !`);
+    show_bandit_window_stats(false);
+    console.log(hero.name);
 }
 
 /************
@@ -364,13 +432,15 @@ document.getElementById('attaquer').addEventListener('click', () => {
     hero.life = hero.life - dgt_bandit;
     write(`- Tu a perdu <b>${dgt_bandit}</b> points de vie.`);
 
+    update_hero(hero);
+    update_bandit(bandit);
+
     //Résolution conflit
     who_won();
 
     // Action du bandit
     bandit_action();
 
-    update_hero(hero);
 });
 
 // Super Attaque /Temporaire doublons de code
@@ -385,31 +455,16 @@ document.getElementById('super').addEventListener('click', () => {
         write(`- Oh non .. tu as raté ton coup.`);
     }
 
-    let chance_bandit = dice(9);
-    let dgt_bandit = dice(bandit.atk);
-    if (chance_bandit >= 7) {
-        dgt_bandit = dgt_bandit * 3;
-        write(`- Oh non ...<b>${bandit.name}</b> t'as mis un coup critque !`);
-    } else {
-        dgt_bandit = 0;
-        write(`- Super tu as échappé son coup critique.`);
-    }
 
-    // résolution bandit vie
-    bandit.life = bandit.life - dgt_hero;
-    write(`- Le bandit à perdu <b>${dgt_hero}</b> points de vie.`);
-
-    // résolution hero vie
-    hero.life = hero.life - dgt_bandit;
-    write(`- Tu a perdu <b>${dgt_bandit}</b> points de vie.`);
-
-    // tour du bandit
-    bandit_action();
+    update_bandit(bandit);
+    update_hero(hero);
 
     // Action du bandit
     bandit_action();
 
-    update_hero(hero);
+    //Résolution conflit
+    who_won();
+
 });
 
 /**
@@ -417,6 +472,9 @@ document.getElementById('super').addEventListener('click', () => {
  */
 document.getElementById('soin').addEventListener('click', () => {
     hero.heal();
+    // Action du bandit
+    bandit_action();
+    update_bandit(bandit);
     update_hero(hero);
 });
 
