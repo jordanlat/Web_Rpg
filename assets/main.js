@@ -138,6 +138,75 @@ function update_hero(e) {
     stat_div.appendChild(div_t_gold);
 }
 
+/**
+ * Action Bandit
+ */
+function bandit_action() {
+    const action = dice(6);
+
+    if (action === 1 | action === 6) {
+        const power_heal = dice(bandit.atk);
+        bandit.life = bandit.life + power_heal;
+        write(
+            `<b>${bandit.name}</b> ce soigne de <b>${power_heal}</b>`
+        );
+    } else if (action === 2 | action === 3 | action === 4) {
+        const is_critik = dice(3);
+        let dgt_bandit;
+        if (is_critik === 3) {
+            dgt_bandit = bandit.atk * 3;
+            write(
+                `Oh non il t'a mis un sacré coup, tu as perdu <b>${dgt_bandit}</b>.`
+            );
+            hero.life = hero.life - dgt_bandit;
+            who_won();
+        }
+    } else {
+        write(
+            `Héhé il s'est loupé !`
+        );
+    }
+}
+
+/**
+ * Check hero life
+ */
+function who_won() {
+    // Condition de défaite
+    if (hero.life <= 0 && bandit.life > 0) {
+        alert("You DIED Bitch");
+        switch_menu();
+        reset();
+    }
+    // condition de victoire
+    if (hero.life > 0 && bandit.life <= 0) {
+        write(
+            `
+                - <b>${bandit.name}</b> a pris une sacrée branlet. Bien joué !
+                Vous gagnez <b>${bandit.exp}</b> exp et <b>${bandit.gold}</b> zoublons. 
+            `
+        );
+
+        alert("Héhé Bien jouer tu l'as battus.");
+
+        hero.exp = hero.exp + bandit.exp;
+        hero.gold = hero.gold + bandit.gold;
+        switch_menu();
+    }
+    // Condition égalité
+    if (hero.life <= 0 && bandit.life <= 0) {
+        alert("Wow imposible... C'est une égalité.");
+        write(
+            `
+                J'y crois pas....
+            `
+        );
+        switch_menu();
+        reset();
+    }
+}
+
+
 
 /**
  * Personages
@@ -295,39 +364,11 @@ document.getElementById('attaquer').addEventListener('click', () => {
     hero.life = hero.life - dgt_bandit;
     write(`- Tu a perdu <b>${dgt_bandit}</b> points de vie.`);
 
-    // Condition de défaite
-    if (hero.life <= 0 && bandit.life > 0) {
-        alert("You DIED Bitch");
-        switch_menu();
-        reset();
-    }
-    // condition de victoire
-    if (hero.life > 0 && bandit.life <= 0) {
-        write(
-            `
-                - <b>${bandit.name}</b> a pris une sacrée branlet. Bien joué !
-                Vous gagnez <b>${bandit.exp}</b> exp et <b>${bandit.gold}</b> zoublons. 
-            `
-        );
+    //Résolution conflit
+    who_won();
 
-        alert("Héhé Bien jouer tu l'as battus.");
-
-        hero.exp = hero.exp + bandit.exp;
-        hero.gold = hero.gold + bandit.gold;
-        switch_menu();
-    }
-    // Condition égalité
-    if (hero.life <= 0 && bandit.life <= 0) {
-        alert("Wow imposible... C'est une égalité.");
-        write(
-            `
-                J'y crois pas....
-            `
-        );
-        switch_menu();
-        reset();
-    }
-
+    // Action du bandit
+    bandit_action();
 
     update_hero(hero);
 });
@@ -336,7 +377,7 @@ document.getElementById('attaquer').addEventListener('click', () => {
 document.getElementById('super').addEventListener('click', () => {
     let chance_hero = dice(9);
     let dgt_hero = dice(hero.atk);
-    if(chance_hero>=7) {
+    if (chance_hero >= 7) {
         dgt_hero = dgt_hero * 3;
         write(`- Wow coup critque !`);
     } else {
@@ -346,7 +387,7 @@ document.getElementById('super').addEventListener('click', () => {
 
     let chance_bandit = dice(9);
     let dgt_bandit = dice(bandit.atk);
-    if(chance_bandit>=7) {
+    if (chance_bandit >= 7) {
         dgt_bandit = dgt_bandit * 3;
         write(`- Oh non ...<b>${bandit.name}</b> t'as mis un coup critque !`);
     } else {
@@ -362,39 +403,11 @@ document.getElementById('super').addEventListener('click', () => {
     hero.life = hero.life - dgt_bandit;
     write(`- Tu a perdu <b>${dgt_bandit}</b> points de vie.`);
 
-    // Condition de défaite
-    if (hero.life <= 0 && bandit.life > 0) {
-        alert("You DIED Bitch");
-        switch_menu();
-        reset();
-    }
-    // condition de victoire
-    if (hero.life > 0 && bandit.life <= 0) {
-        write(
-            `
-                - <b>${bandit.name}</b> a pris une sacrée branlet. Bien joué !
-                Vous gagnez <b>${bandit.exp}</b> exp et <b>${bandit.gold}</b> zoublons. 
-            `
-        );
+    // tour du bandit
+    bandit_action();
 
-        alert("Héhé Bien jouer tu l'as battus");
-
-        hero.exp = hero.exp + bandit.exp;
-        hero.gold = hero.gold + bandit.gold;
-        switch_menu();
-    }
-    // Condition égalité
-    if (hero.life <= 0 && bandit.life <= 0) {
-        alert("Wow imposible... C'est une égalité");
-        write(
-            `
-                    J'y crois pas....
-                `
-        );
-        switch_menu();
-        reset();
-    }
-
+    // Action du bandit
+    bandit_action();
 
     update_hero(hero);
 });
