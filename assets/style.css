@@ -3,6 +3,9 @@
 /*
 *font-family: 'Open Sans', sans-serif;
 */
+body {
+    background-color: rgba(59, 58, 58, 0.712);
+}
 
 body,
 p {
@@ -12,10 +15,12 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
+
+
 }
 
 .global {
-    background-color: rgba(128, 109, 0, 0.493);
+    background-color: rgba(0, 66, 128, 0.692);
     max-width: 70%;
 }
 

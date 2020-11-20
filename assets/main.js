@@ -419,3 +419,21 @@ document.getElementById('soin').addEventListener('click', () => {
     hero.heal();
     update_hero(hero);
 });
+
+/**
+ * Action de fuir
+ */
+document.getElementById('fuir').addEventListener('click', () => {
+    const escape = dice(100);
+
+    if (escape >= 60) {
+        write(
+            `Le bandit t'a empêcher de t'enfuir !`
+        );
+    } else {
+        write(
+            `Oooff il s'en ait fallut de peu, il ne te retrouvera jamais. ;)`
+        );
+        switch_menu();
+    }
+});
